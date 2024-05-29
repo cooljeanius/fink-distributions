@@ -1,11 +1,7 @@
 Info2: <<
 
-Package: cran-rcdk-r%type_pkg[rversion]
+Package: cran-scales-r%type_pkg[rversion]
 Distribution: <<
-	(%type_pkg[rversion] = 31 ) 10.9,
-	(%type_pkg[rversion] = 31 ) 10.10,
-	(%type_pkg[rversion] = 31 ) 10.11,
-	(%type_pkg[rversion] = 31 ) 10.12,
 	(%type_pkg[rversion] = 32 ) 10.9,
 	(%type_pkg[rversion] = 32 ) 10.10,
 	(%type_pkg[rversion] = 32 ) 10.11,
@@ -32,53 +28,57 @@ Distribution: <<
 	(%type_pkg[rversion] = 35 ) 10.14,
 	(%type_pkg[rversion] = 35 ) 10.14.5
 <<
-Type: rversion (4.1 4.0 3.6 3.5 3.4 3.3 3.2 3.1)
-Version: 3.8.1
+Type: rversion (3.5 3.4 3.3 3.2)
+Version: 1.1.1
 Revision: 1
-Description: Interface to the CDK Libraries
-Homepage: https://cran.r-project.org/package=rcdk
-License: LGPL
+Description: Scale functions for graphics
+Homepage: https://cran.r-project.org/package=scales
+License: BSD
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: mirror:custom:rcdk_%v.tar.gz
-Source-Checksum: SHA256(2726b934dedbb61ca0cfd94b086bc47fbbc29f4042e867ca64b37dc06d96bc95)
-SourceDirectory: rcdk
+Source: mirror:custom:scales_%v.tar.gz
+Source-Checksum: SHA256(40b2b66522f1f314a20fd09426011b0cdc9d16b23ee2e765fe1930292dd03705)
+SourceDirectory: scales
 CustomMirror: <<
 	Primary: https://cran.r-project.org/src/contrib
-	Secondary: https://cran.r-project.org/src/contrib/00Archive/rcdk
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/scales
 <<
 Depends: <<
-	r-base%type_pkg[rversion], 
-	cran-fingerprint-r%type_pkg[rversion], 
-	cran-iterators-r%type_pkg[rversion], 
-	cran-itertools-r%type_pkg[rversion],
-	cran-png-r%type_pkg[rversion], 
-	cran-rcdklibs-r%type_pkg[rversion] (>= 2.8),
-	cran-rjava-r%type_pkg[rversion], 
-	system-java (>= 1.8)
+	r-base%type_pkg[rversion],
+	cran-farver-r%type_pkg[rversion],
+	cran-labeling-r%type_pkg[rversion],
+	cran-lifecycle-r%type_pkg[rversion],
+	cran-munsell-r%type_pkg[rversion] (>= 0.5-1),
+	cran-r6-r%type_pkg[rversion],
+	cran-rcolorbrewer-r%type_pkg[rversion],
+	cran-viridislite-r%type_pkg[rversion]
 <<
 BuildDepends: <<
-	r-base%type_pkg[rversion]-dev, system-java-dev (>= 1.8)
+	fink (>= 0.27.2),
+	r-base%type_pkg[rversion]-dev,
+	cran-rcpp-r%type_pkg[rversion]-dev
 <<
+GCC: 4.0
 CompileScript: <<
   #!/bin/bash -ev
+  export TMPDIR=%b/tmp
   BIN_R=%p/Library/Frameworks/R.framework/Versions/%type_raw[rversion]/Resources/bin/R
   
   pushd ..
-  $BIN_R --verbose CMD build --no-build-vignettes rcdk
+  $BIN_R --verbose CMD build --no-build-vignettes scales
 <<
 InstallScript: <<
   #!/bin/sh -ev
   BIN_R=%p/Library/Frameworks/R.framework/Versions/%type_raw[rversion]/Resources/bin/R
   
   mkdir -p %i/lib/R/%type_raw[rversion]/site-library
-  pushd %b/.. && $BIN_R --verbose CMD INSTALL --library=%i/lib/R/%type_raw[rversion]/site-library rcdk
+  pushd %b/.. && $BIN_R --verbose CMD INSTALL --library=%i/lib/R/%type_raw[rversion]/site-library scales
 <<
 DescDetail: <<
-This package allows the user to access functionality in the CDK,
-a Java framework for cheminformatics. This allows the user to load
-molecules, evaluate fingerprints, calculate molecular descriptors
-and so on. In addition the CDK API allows the user to view structures
-in 2D.
+Scales map data to aesthetics, and provide methods for automatically
+determining breaks and labels for axes and legends.
+<<
+DescPackaging: <<
+  R (>= 2.13)
 <<
 
 <<
