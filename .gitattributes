@@ -1,1 +1,2 @@
 10.9-libcxx/stable/main/finkinfo/languages/gcc5-PR71767_PR57438_PR67710.patch linguist-vendored
+*.patch text linguist-language=diff
