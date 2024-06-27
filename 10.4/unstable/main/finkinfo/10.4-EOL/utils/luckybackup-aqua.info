@@ -1,21 +1,39 @@
-Package: luckybackup-aqua
-Version: 0.4.0
-Revision: 1002
-Source: mirror:sourceforge:luckybackup/luckybackup-%v.tar.gz
-Depends: libiconv (>= 1.12-3), libpng3-shlibs (>= 1:1.2.35-2), qt4-mac-core-shlibs (>= 4.5.1-1), qt4-mac-gui-shlibs (>= 4.5.1-1)
-BuildDepends: libpng3 (>= 1:1.2.33-1), qt4-mac (>= 4.5.1-1), libiconv-dev
-Conflicts: luckybackup
-Replaces: luckybackup
-Maintainer: Jack Fink <jackfink@users.sourceforge.net>
-Homepage: http://sourceforge.net/projects/luckybackup
+Package: multitail
+Version: 5.2.7
+Revision: 1
+Description: Unix 'tail' on many files at once
+Homepage: http://www.vanheusden.com/multitail/
 License: GPL
-Description: Qt4-mac/rsync-based backup utility
-GCC: 4.0
-Source-MD5: 8ed16f568b41f8c7b31cc4914f1693bb
-CompileScript: <<
-	%p/lib/qt4-mac/bin/qmake luckybackup.pro && make
+Maintainer: Daniel Macks <dmacks@netspace.org>
+Source: http://www.vanheusden.com/%n/%n-%v.tgz
+Source-MD5: ee7b9861d165b0f2a8519f2f0c299641
+Depends: libncurses5-shlibs (>= 5.4-20041023-9)
+BuildDepends: <<
+	fink (>= 0.24.12),
+	fink-package-precedence,
+	libncurses5 (>= 5.4-20041023-9)
 <<
-InstallScript: perl -pi -e "s,/usr,%p,g" Makefile && make install INSTALL_ROOT=%d
-AppBundles: luckybackup.app
-DocFiles: license/gpl.txt:COPYING readme/changelog:ChangeLog readme/README readme/AUTHORS readme/TRANSLATIONS readme/TODO
-
+PatchFile: %n.patch
+PatchFile-MD5: 6fc5b7e535959d54e2e733538a1b16bd
+PatchScript: <<
+	%{default_script}
+	perl -pi -e 's,/etc,%p/etc,g' help.c
+	perl -pi -e 's,/usr,,g' Makefile
+<<
+SetCPPFLAGS: -MD
+CompileScript: <<
+	make DESTDIR=%p
+	fink-package-precedence --depfile-ext='\.d' .
+<<
+InstallScript: <<
+	make install DESTDIR=%i
+<<
+ConfFiles: %p/etc/multitail.conf
+DocFiles: Changes
+DescPort: <<
+	Localize config file path in help messages. Upstream emailed
+	2011-01-20
+<<
+DescPackaging: <<
+  Wow, this makefile is wacky!
+<<

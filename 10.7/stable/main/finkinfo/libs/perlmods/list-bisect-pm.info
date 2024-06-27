@@ -1,19 +1,15 @@
-Package: list-bisect-pm
-Version: 0.002
+Package: svn-dump-pm
+Version: 0.06
 Revision: 1
-Source: mirror:cpan:authors/id/N/NO/NOTBENH/List-Bisect-%v.tar.gz
-Source-MD5: 255c278e8ce24b6a14a14caddd856bd6
-Type: perl
-BuildDepends: <<
-	module-build-pm (>= 0.36.01-1)
-<<
-DocFiles: LICENSE README
-UpdatePOD: true
-DescPackaging: <<
-	Unclear how this uses Module::Build, but whatever
-<<
-Description: Also collect nonmatches from grep
 License: Artistic/GPL
-Maintainer: Daniel Macks <dmacks@netspace.org>
-Homepage: http://search.cpan.org/dist/List-Bisect
+Description: Perl interface to Subversion dumps
+Maintainer: Daniel Johnson <daniel@daniel-johnson.org>
+Homepage: http://search.cpan.org/dist/SVN-Dump/
 
+Source: mirror:cpan:authors/id/B/BO/BOOK/SVN-Dump-%v.tar.gz
+Source-MD5: 50d121aba9efd024489c4f4c9076dbdf
+
+Type: perl
+UpdatePOD: true
+
+DocFiles: Changes README

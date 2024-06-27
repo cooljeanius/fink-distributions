@@ -1,25 +1,26 @@
-Package: mplayer-skin-default
-Version: 1.7
-Revision: 2
-Provides: mplayer-skin
-Conflicts: mplayer ( <= 0.90pre10 )
-Replaces: mplayer ( <= 0.90pre10 )
-Source: http://www1.mplayerhq.hu/MPlayer/Skin/default-%v.tar.bz2
-Source-MD5: 7e1d16c2f8a32469f4354cb043eecc5d
-SourceDirectory: default
-SourceRename: default-%v-%r.tar.bz2
-CompileScript: echo "Unpacking..."
+Package: pngcrush
+Version: 1.5.10
+Revision: 1
+Maintainer: Ben Hines <bhines@alumni.ucsd.edu>
+Source: mirror:sourceforge:pmt/%n-%v.tar.bz2
+Source-MD5: a659cc4d9f7cf57bbc979193a054704f
+CompileScript: make -f Makefile.gcc CC=cc LD=cc
 InstallScript: <<
-  install -m 755 -d %i/share/mplayer/Skin/default
-  install -m 644 * %i/share/mplayer/Skin/default
-  mkdir -p %i/share/doc/%n
-  echo "This is licensed under the GPL. for more information, please see the docs for mplayer." > %i/share/doc/%n/COPYRIGHT
-<<
-DocFiles: VERSION README
-Description: Default skin for mplayer
+ install -d %i/bin
+ install -s -m 755 %n %i/bin/%n
+ head -40 README.txt >> LICENSE
+ <<
+DocFiles: README.txt  INSTALL.txt LICENSE
+Description: Optimizer for PNG files
 DescDetail: <<
-This package provides a default gui skin for MPlayer.
+pngcrush's main purpose is to reduce the size of the PNG IDAT datastream
+by trying various compression levels an PNG filter methods. It also can
+be used to remove unwanted ancillary chunks, or to add certain chunks including gAMA,
+tRNS, iCCP, and textual chunks.
 <<
-License: GPL
-Maintainer: Chris Zubrzycki <beren12@users.sourceforge.net>
-Homepage: http://www.mplayerhq.hu/
+DescUsage: <<
+ pngcrush [options] infile.png outfile.png
+ See /sw/share/doc/pngcrush/README.txt for options.
+<<
+License: OSI-Approved
+Homepage: http://pmt.sourceforge.net/pngcrush/

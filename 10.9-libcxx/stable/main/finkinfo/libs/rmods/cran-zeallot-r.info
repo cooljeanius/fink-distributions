@@ -1,6 +1,6 @@
 Info2: <<
 
-Package: cran-zeallot-r%type_pkg[rversion]
+Package: cran-simcomp-r%type_pkg[rversion]
 Distribution: <<
 	(%type_pkg[rversion] = 31 ) 10.9,
 	(%type_pkg[rversion] = 31 ) 10.10,
@@ -32,22 +32,25 @@ Distribution: <<
 	(%type_pkg[rversion] = 35 ) 10.14,
 	(%type_pkg[rversion] = 35 ) 10.14.5
 <<
-Type: rversion (4.1 4.0 3.6 3.5 3.4 3.3 3.2 3.1)
-Version: 0.1.0
+Type: rversion (3.6 3.5 3.4 3.3 3.2 3.1)
+Version: 3.3
 Revision: 1
-Description: Multiple/Unpacking/Destructuring Assignment
-Homepage: https://cran.r-project.org/package=zeallot
-License: BSD
+Description: Simultaneous Comparisons for Mult. Endpoints
+Homepage: https://cran.r-project.org/package=SimComp
+License: GPL
 Maintainer: None <fink-devel@lists.sourceforge.net>
-Source: mirror:custom:zeallot_%v.tar.gz
-Source-Checksum: SHA256(439f1213c97c8ddef9a1e1499bdf81c2940859f78b76bc86ba476cebd88ba1e9)
-SourceDirectory: zeallot
+Source: mirror:custom:SimComp_%v.tar.gz
+Source-Checksum: SHA256(2542f02e314841a03491ef081981077ef14bb173f65bb297201fcc0f848e1313)
+SourceDirectory: SimComp
 CustomMirror: <<
 	Primary: https://cran.r-project.org/src/contrib
-	Secondary: https://cran.r-project.org/src/contrib/00Archive/zeallot
+	Secondary: https://cran.r-project.org/src/contrib/00Archive/SimComp
 <<
 Depends: <<
-	r-base%type_pkg[rversion]
+	r-base%type_pkg[rversion],
+	cran-mratios-r%type_pkg[rversion],
+	cran-multcomp-r%type_pkg[rversion],
+	cran-mvtnorm-r%type_pkg[rversion]
 <<
 BuildDepends: r-base%type_pkg[rversion]-dev
 CompileScript: <<
@@ -56,20 +59,25 @@ CompileScript: <<
   BIN_R=%p/Library/Frameworks/R.framework/Versions/%type_raw[rversion]/Resources/bin/R
   
   pushd ..
-  $BIN_R --verbose CMD build --no-build-vignettes zeallot
+  $BIN_R --verbose CMD build --no-build-vignettes SimComp
 <<
 InstallScript: <<
   #!/bin/sh -ev
   BIN_R=%p/Library/Frameworks/R.framework/Versions/%type_raw[rversion]/Resources/bin/R
   
   mkdir -p %i/lib/R/%type_raw[rversion]/site-library
-  pushd %b/.. && $BIN_R --verbose CMD INSTALL --library=%i/lib/R/%type_raw[rversion]/site-library zeallot
+  pushd %b/.. && $BIN_R --verbose CMD INSTALL --library=%i/lib/R/%type_raw[rversion]/site-library SimComp
 <<
 DescDetail: <<
-Provides a %<-% operator to perform multiple, unpacking, and 
-destructuring assignment in R. The operator unpacks the right-hand 
-side of an assignment into multiple values and assigns these 
-values to variables on the left-hand side of the assignment.
+Simultaneous tests and confidence intervals for one-way experimental
+designs with one or many normally distributed, primary response
+variables (endpoints). The procedure of Hasler and Hothorn (2011,2012)
+is applied for differences or ratios of means. Various contrasts can
+be chosen, unbalanced sample sizes are allowed as well as heterogeneous
+variances or covariance matrices.
+<<
+DescPackaging: <<
+  R (>= 2.10.0)
 <<
 
 <<
