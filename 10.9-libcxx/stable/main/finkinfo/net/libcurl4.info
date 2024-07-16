@@ -1,7 +1,5 @@
-# -*- coding: utf-8; tab-width: 4 -*-
-Info4: <<
 Package: libcurl4
-Version: 8.4.0
+Version: 8.8.0
 Revision: 1
 Description: Lib. for transferring files with URL syntax
 DescDetail: <<
@@ -34,11 +32,11 @@ DescPackaging: <<
   explicitly set that option for consistency.
 <<
 Maintainer: Daniel Johnson <daniel@daniel-johnson.org>
-Homepage: http://curl.haxx.se/
+Homepage: http://curl.se/
 License: BSD
 
-Source: https://curl.haxx.se/download/curl-%v.tar.xz
-Source-Checksum: SHA256(16c62a9c4af0f703d28bda6d7bbf37ba47055ad3414d70dec63e2e6336f2a82d)
+Source: https://curl.se/download/curl-%v.tar.xz
+Source-Checksum: SHA256(0f58bb95fc330c8a46eeb3df5701b0d90c9d9bfcc42bd1cd08791d12551d4400)
 
 Depends: %N-shlibs (= %v-%r)
 BuildDepends: <<
@@ -46,36 +44,34 @@ BuildDepends: <<
 	fink-package-precedence,
 	gsasl19-dev,
 	libbrotli1 (>= 1.0.7-1),
+	libidn2.0-dev,
 	libnghttp2.14 (>= 1.41.0-1),
 	librtmp1,
 	libssh2.1 (>= 1.9.0-1),
 	libzstd1-dev,
+	openldap2-dev,
 	pkgconfig
 <<
-BuildConflicts: openldap24-dev, openldap2-dev
 BuildDependsOnly: True
 
 PatchScript: <<
-	#!/bin/sh -ex
-	#Since we're not building static libs, no need to cascade dep libs.
-	perl -pi -e 's/link_all_deplibs=yes/link_all_deplibs=no/g' configure
 	#Clear out unnecessary junk.
-	perl -pi -e 's,\@LDFLAGS\@,,g; s,\@LIBCURL_LIBS\@,,g' curl-config.in
-	perl -pi -e 's,\@LDFLAGS\@,,g; s,\@LIBCURL_LIBS\@,,g' libcurl.pc.in
-	
-	#Set up to use system's ldap
-	InclPREFIX="/usr/include"
-	if [ "$(uname -r | cut -d. -f1)" -ge 18 ]; then
-		InclPREFIX="/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"
-	fi
-
-	/bin/cp $InclPREFIX/lber*.h .
-	/bin/cp $InclPREFIX/ldap*.h .
-	/bin/cp $InclPREFIX/../lib/libldap.* .
+	perl -ni -e 'print unless /\.private:/' libcurl.pc.in
+	# harden build
+	perl -pi -e "s/(xc_lt_shlib_use_no_undefined=)'no'/\1'yes'/" configure
+	# safer linker flags
+	perl -pi -e 's|-framework |-Wl,-framework,|g' configure
 <<
 
 SetLDFLAGS: -Wl,-dead_strip_dylibs
 SetCFLAGS: -Os
+# Some libcares2 have bugs that affect curl. Leaving disabled until
+# that situation is resolved in a release. When we do enable, set a
+# versioned dep to make sure the bug-fix is present. See:
+#   https://github.com/c-ares/c-ares/issues/454
+#   https://github.com/c-ares/c-ares/issues/783
+#
+# HTTPSRR is marked experimental, so leaving is disabled for now.
 ConfigureParams: <<
 	--with-secure-transport \
 	--without-openssl \
@@ -85,8 +81,8 @@ ConfigureParams: <<
 	--enable-ldap \
 	--disable-ldaps \
 	--with-ldap-lib=ldap \
-	--with-lber-lib=no \
-	--without-libidn2 \
+	--with-lber-lib=lber \
+	--with-libidn2 \
 	--with-librtmp \
 	--with-nghttp2=%p \
 	--with-brotli=%p \
@@ -100,23 +96,14 @@ ConfigureParams: <<
 	--enable-dependency-tracking \
 	--disable-silent-rules
 <<
-UseMaxBuildJobs: true
 
 CompileScript: <<
-	#!/bin/sh -ev
-	ver=`sw_vers -productVersion | cut -d . -f 1,2`
-	export CFLAGS="$CFLAGS -mmacosx-version-min=$ver"
-	
 	%{default_script}
 	fink-package-precedence --prohibit-bdep=%n .
 <<
 
 InstallScript: <<
-	perl -pi -e 's/-g -Os -Wl,-search_paths_first //g; s/-dynamic //g' curl-config libcurl.pc
 	make install DESTDIR=%d
-	perl -pi -e "s/inherited_linker_flags=.*$/inherited_linker_flags=''/" %i/lib/*.la
-	mkdir -p %i/share/aclocal
-	install -m644 docs/libcurl/libcurl.m4 %i/share/aclocal
 <<
 DocFiles: CHANGES COPYING README RELEASE-NOTES
 
@@ -126,10 +113,12 @@ SplitOff: <<
 	Depends: <<
 		gsasl19-shlibs,
 		libbrotli1-shlibs (>= 1.0.7-1),
+		libidn2.0-shlibs,
 		libnghttp2.14-shlibs (>= 1.41.0-1),
 		librtmp1-shlibs,
 		libssh2.1-shlibs (>= 1.9.0-1),
-		libzstd1-shlibs
+		libzstd1-shlibs,
+		openldap2-shlibs
 	<<
     
 	Files: lib/libcurl.4.*dylib
@@ -218,5 +207,4 @@ InfoTest: <<
     make test-full TEST_F="-a -p -r -n" || exit 2
     fink-package-precedence --prohibit-bdep=%n . || exit 2
   <<
-<<
 <<
