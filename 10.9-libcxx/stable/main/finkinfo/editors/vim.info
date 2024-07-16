@@ -1,13 +1,13 @@
 Info2: <<
 Package: vim%type_pkg[-nox]
 Type: -nox (boolean)
-Version: 9.1.471
+Version: 9.1.544
 Revision: 1
 Description: Improved version of the editor "vi"
 License: Restrictive/Distributable
 Maintainer: Hisashi Todd Fujinaka <htodd@twofifty.com>
 Source: http://www.i8u.org/~htodd/finksrc/vim-%v.tar.bz2
-Source-Checksum: SHA256(9e1d25b56025d0f42b3bab9b33eb4d0169c63ccc7b1a0dadfbfa839805519db9)
+Source-Checksum: SHA256(547a273bc37d10d9b0d299417a8cba86eeaa8049586ad4dd9187921fb6c45bb2)
 SourceDirectory: vim
 PatchScript: <<
 	# autoconf2.6ish patch for modern XQuartz paths
