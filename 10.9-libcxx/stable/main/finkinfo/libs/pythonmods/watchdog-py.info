@@ -1,22 +1,23 @@
 Info2: <<
 Package: watchdog-py%type_pkg[python]
-Version: 3.0.0
+Version: 6.0.0
 Revision: 1
 Description: Python API/shell utils to monitor FS events
 License: BSD
 # Free to modify, update, and take over
 Maintainer: Hanspeter Niederstrasser <nieder@users.sourceforge.net>
-Type: python (3.7 3.8 3.9 3.10)
+Type: python (3.9 3.10)
 Depends: <<
-	python%type_pkg[python]
+	python%type_pkg[python],
+	yaml-py%type_pkg[python] (>= 3.10)
 <<
 BuildDepends: <<
-	bootstrap-modules-py%type_pkg[python]
+	setuptools-tng-py%type_pkg[python]
 <<
 Source: https://files.pythonhosted.org/packages/source/w/watchdog/watchdog-%v.tar.gz
-Source-Checksum: SHA256(4d98a320595da7a7c5a18fc48cb633c2e73cda78f93cac2ef42d42bf609a33f9)
+Source-Checksum: SHA256(9ddf7c82fda3ae8e24decda1338ede66e1c99883db93711d8fb941eaa2d8c282)
 CompileScript: <<
-	PYTHONPATH=%p/share/bootstrap-modules-python%type_pkg[python] %p/bin/python%type_raw[python] -m build --wheel --no-isolation --skip-dependency-check
+	%p/bin/python%type_raw[python] setup.py build
 <<
 InfoTest: <<
 #		mypy-py%type_pkg[python],
@@ -27,12 +28,12 @@ InfoTest: <<
 		pytest-timeout-py%type_pkg[python]
 	<<
 	TestScript: <<
-		PYTHONPATH=$(ls -d %b/build/lib.macosx-*-%type_raw[python]) %p/bin/python%type_raw[python] -m pytest -vv || exit 2
+		PYTHONPATH=$(ls -d %b/build/lib.macosx-*-%type_raw[python]) %p/bin/python%type_raw[python] -B -m pytest -p no:relaxed -p no:randomly -vv || exit 2
 	<<
 <<
 InstallScript: <<
 	#!/bin/sh -ev
-	PYTHONPATH=%p/share/bootstrap-modules-python%type_pkg[python] %p/bin/python%type_raw[python] -m installer --destdir %d dist/*.whl
+	%p/bin/python%type_raw[python] setup.py install --root=%d
 	for i in watchmedo ; do
 		mv %i/bin/$i %i/bin/$i-py%type_raw[python]
 	done
