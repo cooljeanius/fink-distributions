@@ -1,6 +1,6 @@
 Package: perl5302
 Version: 5.30.2
-Revision: 3
+Revision: 4
 # To match /usr/bin/perl5.30 on 11.3-11.x
 Distribution: 10.9, 10.10, 10.11, 10.12, 10.13, 10.14, 10.14.5, 10.15, 11.0, 12.0, 13.0, 14.0, 15.0
 BuildDepends: <<
@@ -8,11 +8,7 @@ BuildDepends: <<
 	fink (>= 0.32.0),
 	gdbm6
 <<
-Depends: <<
-	db60-aes-shlibs,
-	%n-core (>= %v-%r),
-	gdbm6-shlibs
-<<
+Depends: %n-core (>= %v-%r)
 Conflicts: perl5162, perl5182, perl5184, perl5282, perl5302, perl5303, perl5341
 Replaces: perl5162, perl5182, perl5184, perl5282, perl5302, perl5303, perl5341
 License: Artistic
@@ -62,7 +58,7 @@ PatchFile-MD5: 0f8c7627076dbe48431f309b2c2a618b
 PatchFile4: %n-macos11.patch
 PatchFile4-MD5: 78edd43fda6f4bd3870425112fae9fc9
 PatchFile5: %n-timehires.patch
-PatchFile5-MD5: 7d3614729a5a8d475315bd7b1a2c5f38
+PatchFile5-MD5: ab4e09a80119a4236b76db1886eddac9
 PatchFile6: %n-libperl-t.patch
 PatchFile6-MD5: 011c5619e14e495930e1f4775b8bac82
 PatchFile7: %n-clang_braces.patch
@@ -110,6 +106,12 @@ CompileScript: <<
 DocFiles: README Copying
 InfoTest: <<
 	TestScript: <<
+	#!/bin/sh -ev
+		# Occasional reported Time-HiRes test-failures
+		#	https://pastebin.com/JK68gr5p
+		# likely due to other system processes. See:
+		#	https://github.com/Perl/perl5/pull/20908
+		export PERL_FILE_ATIME_CHANGES=1
 		make test || exit 2
 	<<
 <<
@@ -178,6 +180,10 @@ SplitOff: <<
   text-wrap-pm5302,
   time-hires-pm5302,
   unicode-normalize-pm5302
+ <<
+ Depends: <<
+  db60-aes-shlibs,
+  gdbm6-shlibs
  <<
  Files: bin/perl5.30.2 etc lib/perl5 lib/perl5-core
  Description: Core files for perl, v. 5.30.2
