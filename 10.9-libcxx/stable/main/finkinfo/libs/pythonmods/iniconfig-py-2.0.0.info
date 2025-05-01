@@ -1,0 +1,58 @@
+Info2: <<
+Package: iniconfig-py%type_pkg[python]
+Version: 2.0.0
+Revision: 1
+Description: Brain-dead simple parsing of ini files
+License: BSD
+# Free to update and take over
+Maintainer: Hanspeter Niederstrasser <nieder@users.sourceforge.net>
+Type: python (3.7)
+Depends: <<
+	python%type_pkg[python]
+<<
+BuildDepends: <<
+	bootstrap-modules-py%type_pkg[python],
+	hatchling-py%type_pkg[python] (>= 0.21.1),
+	hatch-vcs-py%type_pkg[python]
+<<
+Source: https://files.pythonhosted.org/packages/source/i/iniconfig/iniconfig-%v.tar.gz
+Source-Checksum: SHA256(2d91e135bf72d31a410b17c16da610a82cb55f6b0477d1a902134b24a455b8b3)
+CompileScript: <<
+	PYTHONPATH=%p/share/bootstrap-modules-python%type_pkg[python] %p/bin/python%type_raw[python] -m build --wheel --no-isolation --skip-dependency-check
+<<
+InfoTest: <<
+	# Needs pytest to run tests (circular dependency)
+	#pytest-py%type_pkg[python],
+	TestDepends: <<
+		toml-py%type_pkg[python]
+	<<
+	TestScript: <<
+		#!/bin/sh -ev
+		# check for presence of pytest
+		if [ ! -x %p/bin/pytest-%type_raw[python] ] ; then
+			echo '\nNot running tests because pytest-py%type_pkg[python] is not installed.\n'
+			exit 0;
+		else
+			# tests were not included in 2.0.0 PyPi tarball
+			echo "not running tests"
+			#PYTHONPATH=%b/build/lib:$PYTHONPATH %p/bin/python%type_raw[python] -B -m pytest -vv || exit 2
+		fi
+	<<
+<<
+InstallScript: <<
+	PYTHONPATH=%p/share/bootstrap-modules-python%type_pkg[python] %p/bin/python%type_raw[python] -m installer --destdir %d dist/*.whl
+<<
+DocFiles: LICENSE README.rst
+Homepage: https://github.com/pytest-dev/iniconfig
+DescDetail: <<
+iniconfig is a small and simple INI-file parser module having a unique
+set of features:
+
+    *maintains order of sections and entries
+    *supports multi-line values with or without line-continuations
+    *supports "#" comments everywhere
+    *raises errors with proper line-numbers
+    *no bells and whistles like automatic substitutions
+    *iniconfig raises an Error if two sections have the same name.
+<<
+<<

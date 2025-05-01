@@ -1,8 +1,9 @@
 Package: libavcodec60-6.0-shlibs
-Version: 6.1.1
-Revision: 1
+Version: 6.1.2
+Revision: 2
 BuildDepends: <<
 	bzip2,
+	fink (>= 0.30.0),
 	fink-buildenv-modules (>= 0.1.7),
 	fink-package-precedence,
 	fontconfig2-dev,
@@ -48,7 +49,7 @@ BuildDepends: <<
 	nasm,
 	pkgconfig,
 	sdl2,
-	texinfo (>= 5.0-1),
+	texinfo (>= 6.8-1),
 	twolame-dev (>= 0.3.13-1),
 	vid.stab1.2-dev,
 	x11-dev,
@@ -106,8 +107,13 @@ Depends: <<
 <<
 ###
 Source: https://ffmpeg.org/releases/ffmpeg-%v.tar.bz2
-Source-Checksum: SHA256(5e3133939a61ef64ac9b47ffd29a5ea6e337a4023ef0ad972094b4da844e3a20)
+Source-Checksum: SHA256(62fe9fd098cb537d4b61731b11049e1ac179f38c870a41b8e9d556af944edb45)
 ###
+PatchFile: %n_texinfo72.patch
+PatchFile-MD5: 460868fa2b167e7c57f605d1018c4374
+# pointer-type compatibility (credit: PR #1208)
+PatchFile2: %n_incompatible-type.patch
+PatchFile2-MD5: 49c3d8005021c8d992b4c2c048ef104b
 PatchScript: <<
 	#!/bin/sh -ev
 	%{default_script}
@@ -213,7 +219,7 @@ CompileScript: <<
 	. %p/sbin/fink-buildenv-helper.sh
 	# linker in Xcode15 is broken, so use ld_classic
 	XCODE_MAJOR=`echo $XCODE_VERSION | cut -f1 -d.`
-	if [ "$XCODE_MAJOR" -eq "15" ]; then
+	if [ "$XCODE_MAJOR" -ge "15" ]; then
 		EXTRA_LDFLAGS="$EXTRA_LDFLAGS -Wl,-ld_classic"
 	fi
 	mkdir finkbuild
@@ -340,14 +346,16 @@ SplitOff: <<
 		libavcodec57-3.0-dev,
 		libavcodec58-4.0-dev,
 		libavcodec59-5.0-dev,
-		libavcodec60-6.0-dev
+		libavcodec60-6.0-dev,
+		libavcodec61-7.0-dev
 	<<
 	Replaces: <<
 		libavcodec56-2.4-dev,
 		libavcodec57-3.0-dev,
 		libavcodec58-4.0-dev,
 		libavcodec59-5.0-dev,
-		libavcodec60-6.0-dev
+		libavcodec60-6.0-dev,
+		libavcodec61-7.0-dev
 	<<
 	BuildDependsOnly: true
 	Files: <<
@@ -434,14 +442,16 @@ SplitOff3: <<
 		libavdevice57-3.0-dev,
 		libavdevice58-4.0-dev,
 		libavdevice59-5.0-dev,
-		libavdevice60-6.0-dev
+		libavdevice60-6.0-dev,
+		libavdevice61-7.0-dev
 	<<
 	Replaces: <<
 		libavdevice56-2.4-dev,
 		libavdevice57-3.0-dev,
 		libavdevice58-4.0-dev,
 		libavdevice59-5.0-dev,
-		libavdevice60-6.0-dev
+		libavdevice60-6.0-dev,
+		libavdevice61-7.0-dev
 	<<
 	BuildDependsOnly: true
 	Files: <<
@@ -527,14 +537,16 @@ SplitOff5: <<
 		libavfilter6-3.0-dev,
 		libavfilter7-4.0-dev,
 		libavfilter8-5.0-dev,
-		libavfilter9-6.0-dev
+		libavfilter9-6.0-dev,
+		libavfilter10-7.0-dev
 	<<
 	Replaces: <<
 		libavfilter5-2.4-dev,
 		libavfilter6-3.0-dev,
 		libavfilter7-4.0-dev,
 		libavfilter8-5.0-dev,
-		libavfilter9-6.0-dev
+		libavfilter9-6.0-dev,
+		libavfilter10-7.0-dev
 	<<
 	BuildDependsOnly: true
 	Files: <<
@@ -617,14 +629,16 @@ SplitOff7: <<
 		libavformat57-3.0-dev,
 		libavformat58-4.0-dev,
 		libavformat59-5.0-dev,
-		libavformat60-6.0-dev
+		libavformat60-6.0-dev,
+		libavformat61-7.0-dev
 	<<
 	Replaces: <<
 		libavformat56-2.4-dev,
 		libavformat57-3.0-dev,
 		libavformat58-4.0-dev,
 		libavformat59-5.0-dev,
-		libavformat60-6.0-dev
+		libavformat60-6.0-dev,
+		libavformat61-7.0-dev
 	<<
 	BuildDependsOnly: true
 	Files: <<
@@ -704,14 +718,16 @@ SplitOff9: <<
 		libavutil55-3.0-dev,
 		libavutil56-4.0-dev,
 		libavutil57-5.0-dev,
-		libavutil58-6.0-dev
+		libavutil58-6.0-dev,
+		libavutil59-7.0-dev
 	<<
 	Replaces: <<
 		libavutil54-2.4-dev,
 		libavutil55-3.0-dev,
 		libavutil56-4.0-dev,
 		libavutil57-5.0-dev,
-		libavutil58-6.0-dev
+		libavutil58-6.0-dev,
+		libavutil59-7.0-dev
 	<<
 	BuildDependsOnly: true
 	Files: <<
@@ -792,14 +808,16 @@ SplitOff11: <<
 		libpostproc54-3.0-dev,
 		libpostproc55-4.0-dev,
 		libpostproc56-5.0-dev,
-		libpostproc57-6.0-dev
+		libpostproc57-6.0-dev,
+		libpostproc58-7.0-dev
 	<<
 	Replaces: <<
 		libpostproc53-2.4-dev,
 		libpostproc54-3.0-dev,
 		libpostproc55-4.0-dev,
 		libpostproc56-5.0-dev,
-		libpostproc57-6.0-dev
+		libpostproc57-6.0-dev,
+		libpostproc58-7.0-dev
 	<<
 	BuildDependsOnly: true
 	Files: <<
@@ -879,14 +897,16 @@ SplitOff13: <<
 		libswscale4-3.0-dev,
 		libswscale5-4.0-dev,
 		libswscale6-5.0-dev,
-		libswscale7-6.0-dev
+		libswscale7-6.0-dev,
+		libswscale8-7.0-dev
 	<<
 	Replaces: <<
 		libswscale3-2.4-dev,
 		libswscale4-3.0-dev,
 		libswscale5-4.0-dev,
 		libswscale6-5.0-dev,
-		libswscale7-6.0-dev
+		libswscale7-6.0-dev,
+		libswscale8-7.0-dev
 	<<
 	BuildDependsOnly: true
 	Files: <<
@@ -967,14 +987,16 @@ SplitOff15: <<
 		libswresample2-3.0-dev,
 		libswresample3-4.0-dev,
 		libswresample4-5.0-dev,
-		libswresample4-6.0-dev
+		libswresample4-6.0-dev,
+		libswresample5-7.0-dev
 	<<
 	Replaces: <<
 		libswresample1-2.4-dev,
 		libswresample2-3.0-dev,
 		libswresample3-4.0-dev,
 		libswresample4-5.0-dev,
-		libswresample4-6.0-dev
+		libswresample4-6.0-dev,
+		libswresample5-7.0-dev
 	<<
 	BuildDependsOnly: true
 	Files: <<
@@ -1065,6 +1087,8 @@ DescDetail: <<
 <<
 DescPackaging: <<
 ffmpeg-6.0 is put in a private dir to segregate the dylibs if libN gets bumped.  The executables are kept in %p/bin. In the 3.0 series (3.0-3.4) -> 4.0 bump, all the dylibs had their SONAME bumped. Upstream has now been bumping all libraries together when there's a major API break. For 5.0 -> 6.0, all SONAMES were bumped except for swresample.
+
+Patch for building against texinfo-7.2: https://ffmpeg.org//pipermail/ffmpeg-devel/2024-November/335575.html
 <<
 ###
 License: GPL3

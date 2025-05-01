@@ -1,0 +1,49 @@
+Package: launch
+Version: 1.2.5
+Revision: 3
+BuildDepends: xcode.app
+Distribution: 10.9, 10.10, 10.11, 10.12
+Source: https://sabi.net/nriley/software/%n-%v.tar.gz 
+Source-Checksum: SHA256(486632b11bee04d9f6bcb595fd2a68b5fde2f748ebdc182274778cc5cf97ff70)
+PatchScript: <<
+ls -la
+perl -pi -e 's#10.8#10.9#g' launch.xcodeproj/project.pbxproj 
+<<
+CompileScript: <<
+#!/bin/sh -ev
+	mv launch launch.orig
+	/usr/bin/xcodebuild -UsePerConfigurationBuildLocations=NO SYMROOT=. OBJROOT=.
+	head -n 17 main.m > LICENSE
+<<
+InstallScript: << 
+	strip %n
+	install -d -m 755  %i/bin
+	install -m 755 %n %i/bin
+	install -d -m 755 %i/share/man/man1
+	install -m 644 %n.1 %i/share/man/man1
+<<
+DocFiles: README LICENSE
+Description: Replacement for macOS "open" command
+DescDetail: <<
+launch is a replacement for "open" which:
+* Opens URLs, directly or in your preferred helper application.
+* Lets you specify applications by their four-char creator (e.g. 'ToyS') or 
+Java-style
+ bundle ID (e.g. com.apple.scripteditor), both of which allow you to move or 
+rename an app.
+* Asks applications to print documents, something the OS X Finder is missing.
+* Launches applications in the background, or launches Carbon applications in 
+Classic.
+* Shows info about any item on disk, including its file type, creator, data 
+and resource fork sizes, dates and bundle ID.
+<<
+DescPackaging: <<
+macosx/dpkg dependency should be added when that code is working.
+Former Maintainer: Ben Hines <bhines@alumni.ucsd.edu>
+<<
+DescPort: <<
+fink package broken into < 10.13 and >= 10.13
+<<
+License: BSD
+Maintainer: None <fink-devel@lists.sourceforge.net>
+Homepage: https://sabi.net/nriley/software/

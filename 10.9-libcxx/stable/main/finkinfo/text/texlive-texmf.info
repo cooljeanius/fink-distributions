@@ -39,7 +39,7 @@ Provides: <<
 Source: mirror:sourceforge:fink/texlive-%v-texmf-delpdf.tar.xz
 Source-Checksum: SHA256(72dcbfb328242fe06f7f3f90bc21b48e98b7f914c357246760e6ce87819390de)
 PatchFile: %n.patch
-PatchFile-MD5: 00f42a2fdefd8a8ad54d6d09a73c98e1
+PatchFile-Checksum: SHA256(0d0a999cbef84d8925954c9030995bf29bfdc5dee273f5426a78a047168f4a05)
 PatchScript: <<
  sed 's|@PREFIX@|%p|g' < %{PatchFile} | patch -p1
 
